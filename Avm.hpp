@@ -6,7 +6,7 @@
 /*   By: dborysen <dborysen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 12:16:49 by dborysen          #+#    #+#             */
-/*   Updated: 2019/02/22 15:18:15 by dborysen         ###   ########.fr       */
+/*   Updated: 2019/02/25 12:01:43 by dborysen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <regex>
 
 class Avm
 {

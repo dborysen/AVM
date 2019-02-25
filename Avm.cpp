@@ -6,7 +6,7 @@
 /*   By: dborysen <dborysen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 13:25:21 by dborysen          #+#    #+#             */
-/*   Updated: 2019/02/22 15:22:16 by dborysen         ###   ########.fr       */
+/*   Updated: 2019/02/25 17:29:27 by dborysen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,35 @@ bool    Avm::ValidateData()
         std::cerr << "Error: no data" << std::endl;
         return false;
     }
+    
+    std::regex validationReg("((push|assert)\\s+"
+                            "((int8|int16|int32)"
+                            "\\(([0-9]+)\\))"
+                            "[\t ]*(;.*)?)"
 
+                            "|((push|assert)\\s+"
+                            "(float|double)"
+                            "\\([0-9]+.[0-9]*\\)"
+                            "[\t ]*(;.*)?"
+
+                            "|([\t ]*;.*)"
+                            "|(pop|dump|add|sub|mul|div|mod|print|exit)"
+                            "[\t ]*(;.*)?)"
+                            "|(^\\s*$))");
+
+    bool isOk = true;
+    for(auto i = 0u; i < _inputData.size(); i++)
+    {
+        if (!std::regex_match(_inputData.at(i).c_str(), validationReg))
+        {
+            std::cerr << "[line " << i
+            << "]\033[1;31m Error\033[0m wrong input format:"
+            << std::endl << "\t" + _inputData.at(i) << std::endl;
+
+            isOk = false;
+        }
+    }
+    return isOk;
 }
 
 void    Avm::LoadData()

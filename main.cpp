@@ -6,7 +6,7 @@
 /*   By: dborysen <dborysen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 11:31:31 by dborysen          #+#    #+#             */
-/*   Updated: 2019/02/22 14:51:45 by dborysen         ###   ########.fr       */
+/*   Updated: 2019/02/25 17:30:16 by dborysen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,11 @@ int main(int argc, char** argv)
 
     isInputFromFile ? avm.LoadData(argv[argc - 1]) : avm.LoadData();
 
-    avm.ParseData();
-
-    avm.ShowData();    
-
+    if (avm.ValidateData())
+    {
+        
+    }
+    // avm.ShowData();    
 
     return 0;
 }
