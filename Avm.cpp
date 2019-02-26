@@ -6,7 +6,7 @@
 /*   By: dborysen <dborysen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 13:25:21 by dborysen          #+#    #+#             */
-/*   Updated: 2019/02/25 17:29:27 by dborysen         ###   ########.fr       */
+/*   Updated: 2019/02/26 12:11:32 by dborysen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,4 +85,9 @@ void    Avm::ShowData() const
     {
         std::cout << line << std::endl;
     }
+}
+
+std::vector<std::string> Avm::GetInputData() const
+{
+    return _inputData;
 }

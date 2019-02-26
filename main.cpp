@@ -6,7 +6,7 @@
 /*   By: dborysen <dborysen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 11:31:31 by dborysen          #+#    #+#             */
-/*   Updated: 2019/02/25 17:30:16 by dborysen         ###   ########.fr       */
+/*   Updated: 2019/02/26 15:45:17 by dborysen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int main(int argc, char** argv)
 {
-    if (argc > 2)
+    if (argc > maxArgNum)
     {
         std::cerr << "Error Input Params" << std::endl;
         exit(1);
@@ -22,15 +22,23 @@ int main(int argc, char** argv)
 
     Avm avm;
 
-    const auto isInputFromFile = argc == 2;
+    const auto isInputFromFile = argc == maxArgNum;
 
-    isInputFromFile ? avm.LoadData(argv[argc - 1]) : avm.LoadData();
+    isInputFromFile ? avm.LoadData(argv[argId]) : avm.LoadData();
 
-    if (avm.ValidateData())
+    if (!avm.ValidateData())
     {
-        
+        std::cerr << "Data validation fail" << std::endl;
+        exit(1);
     }
-    // avm.ShowData();    
+
+    avm.lexer.SaveTokens(avm.GetInputData());
+
+    for (const auto& token : avm.lexer.GetTokens())
+    {
+        std::cout << token.instruction + " " 
+        << token.type + " " << token.value << std::endl; 
+    }
 
     return 0;
 }
