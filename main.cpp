@@ -6,7 +6,7 @@
 /*   By: dborysen <dborysen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 11:31:31 by dborysen          #+#    #+#             */
-/*   Updated: 2019/02/26 15:45:17 by dborysen         ###   ########.fr       */
+/*   Updated: 2019/02/27 15:32:39 by dborysen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,13 @@ int main(int argc, char** argv)
     }
 
     avm.lexer.SaveTokens(avm.GetInputData());
+    avm.parser.ParseTokens(avm.lexer.GetTokens());
+    
 
     for (const auto& token : avm.lexer.GetTokens())
     {
         std::cout << token.instruction + " " 
-        << token.type + " " << token.value << std::endl; 
+        << token.type << " " << token.value << std::endl; 
     }
 
     return 0;

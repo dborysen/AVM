@@ -52,6 +52,8 @@
         "vector": "cpp",
         "deque": "cpp",
         "fstream": "cpp",
-        "regex": "cpp"
+        "regex": "cpp",
+        "__tree": "cpp",
+        "map": "cpp"
     }
 }

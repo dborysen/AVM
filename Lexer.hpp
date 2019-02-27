@@ -6,7 +6,7 @@
 /*   By: dborysen <dborysen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 11:31:52 by dborysen          #+#    #+#             */
-/*   Updated: 2019/02/26 15:21:28 by dborysen         ###   ########.fr       */
+/*   Updated: 2019/02/27 15:47:31 by dborysen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <vector>
 #include <string>
 #include <regex>
+#include "IOperand.hpp"
 
 class Lexer
 {

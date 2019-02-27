@@ -6,7 +6,7 @@
 /*   By: dborysen <dborysen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 12:16:49 by dborysen          #+#    #+#             */
-/*   Updated: 2019/02/26 12:20:01 by dborysen         ###   ########.fr       */
+/*   Updated: 2019/02/27 13:48:13 by dborysen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 #include <vector>
 #include <regex>
 #include "Lexer.hpp"
+#include "Parser.hpp"
+#include "IOperand.hpp"
 
 enum avmAttributes
 {
@@ -50,10 +52,11 @@ public:
     void    ShowData() const;
 
     Lexer   lexer;
+    Parser  parser;
 
 private:
     std::vector<std::string>    _inputData;
-
+    std::vector<IOperand*>      _mainStack;
 };
 
 # endif

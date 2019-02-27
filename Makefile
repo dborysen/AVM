@@ -6,13 +6,13 @@
 #    By: dborysen <dborysen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/15 11:35:57 by dborysen          #+#    #+#              #
-#    Updated: 2019/02/26 11:54:02 by dborysen         ###   ########.fr        #
+#    Updated: 2019/02/27 13:47:00 by dborysen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = AVM
 
-SRCS =  main.cpp Avm.cpp Lexer.cpp
+SRCS =  main.cpp Avm.cpp Lexer.cpp Parser.cpp
 
 OBJECT = $(SRCS:.cpp=.o)
 

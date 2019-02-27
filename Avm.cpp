@@ -6,7 +6,7 @@
 /*   By: dborysen <dborysen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 13:25:21 by dborysen          #+#    #+#             */
-/*   Updated: 2019/02/26 12:11:32 by dborysen         ###   ########.fr       */
+/*   Updated: 2019/02/27 13:37:47 by dborysen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 bool    Avm::ValidateData()
 {
-    if (_inputData.empty())
+    if (_inputData.size() == 1 && *_inputData.begin() == "")
     {
         std::cerr << "Error: no data" << std::endl;
         return false;
@@ -40,7 +40,7 @@ bool    Avm::ValidateData()
     {
         if (!std::regex_match(_inputData.at(i).c_str(), validationReg))
         {
-            std::cerr << "[line " << i
+            std::cerr << "[line " << i + 1
             << "]\033[1;31m Error\033[0m wrong input format:"
             << std::endl << "\t" + _inputData.at(i) << std::endl;
 
