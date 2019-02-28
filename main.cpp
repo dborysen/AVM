@@ -6,7 +6,7 @@
 /*   By: dborysen <dborysen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 11:31:31 by dborysen          #+#    #+#             */
-/*   Updated: 2019/02/27 15:32:39 by dborysen         ###   ########.fr       */
+/*   Updated: 2019/02/28 12:48:58 by dborysen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,32 +14,34 @@
 
 int main(int argc, char** argv)
 {
-    if (argc > maxArgNum)
+    try
     {
-        std::cerr << "Error Input Params" << std::endl;
-        exit(1);
+        if (argc > maxArgNum)
+            throw std::logic_error("\033[1;31mError:\033[0m wrong params num");
+
+        Avm avm;
+
+        const auto isInputFromFile = argc == maxArgNum;
+
+        isInputFromFile ? avm.LoadData(argv[argId]) : avm.LoadData();
+
+        if (!avm.ValidateData())
+            throw std::logic_error("\tData validation fail");
+
+        avm.lexer.SaveTokens(avm.GetInputData());
+
+        if (!avm.parser.ParseTokens(avm.lexer.GetTokens()))
+            throw std::logic_error("\tParsing fail");
+
+            for (const auto& token : avm.lexer.GetTokens())
+            {
+                std::cout << token.instruction + " " 
+                << token.type << " " << token.value << std::endl; 
+            }
     }
-
-    Avm avm;
-
-    const auto isInputFromFile = argc == maxArgNum;
-
-    isInputFromFile ? avm.LoadData(argv[argId]) : avm.LoadData();
-
-    if (!avm.ValidateData())
+    catch(const std::exception& e)
     {
-        std::cerr << "Data validation fail" << std::endl;
-        exit(1);
-    }
-
-    avm.lexer.SaveTokens(avm.GetInputData());
-    avm.parser.ParseTokens(avm.lexer.GetTokens());
-    
-
-    for (const auto& token : avm.lexer.GetTokens())
-    {
-        std::cout << token.instruction + " " 
-        << token.type << " " << token.value << std::endl; 
+        std::cerr << e.what() << std::endl;
     }
 
     return 0;

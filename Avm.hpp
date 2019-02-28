@@ -6,7 +6,7 @@
 /*   By: dborysen <dborysen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 12:16:49 by dborysen          #+#    #+#             */
-/*   Updated: 2019/02/27 13:48:13 by dborysen         ###   ########.fr       */
+/*   Updated: 2019/02/28 13:02:23 by dborysen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ public:
 
 private:
     std::vector<std::string>    _inputData;
-    std::vector<IOperand*>      _mainStack;
 };
 
 # endif

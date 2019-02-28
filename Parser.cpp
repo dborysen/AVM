@@ -6,11 +6,13 @@
 /*   By: dborysen <dborysen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/27 12:56:05 by dborysen          #+#    #+#             */
-/*   Updated: 2019/02/27 17:41:47 by dborysen         ###   ########.fr       */
+/*   Updated: 2019/02/28 17:26:28 by dborysen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Parser.hpp"
+
+using OperandCreatorsVector = std::vector<std::function<const IOperand*(const std::string& value)> >;
 
 static std::map<std::string, eOperandType> typeMap{
     {"int8", Int8 },
@@ -54,15 +56,78 @@ static bool IsValuesInRightDiapason(const std::vector<Lexer::Token>& tokens)
     return true;
 }
 
-bool    Parser::ParseTokens(const std::vector<Lexer::Token>& tokens) const
+bool    Parser::IsParseValidationOk(const std::vector<Lexer::Token>& tokens) const
 {
     if (!IsExitExist(tokens))
     {
-        std::cerr << "NO Exit" << std::endl;
+        std::cerr << "\033[1;31mError:\033[0m no exit" << std::endl;
         return false;
     }
 
-    IsValuesInRightDiapason(tokens);
+    if (!IsValuesInRightDiapason(tokens))
+    {
+        std::cerr << "\033[1;31mError:\033[0m value in wrong diapason" << std::endl;
+        return false;
+    }
+    return true;
+}
+
+const IOperand* Parser::CreateInt8(const std::string& value) const
+{
+    return new Operand(Int8, value);
+}
+
+const IOperand* Parser::CreateInt16(const std::string& value) const
+{
+    return new Operand(Int16, value);
+}
+
+const IOperand* Parser::CreateInt32(const std::string& value) const
+{
+    return new Operand(Int32, value);
+}
+
+const IOperand* Parser::CreateFloat(const std::string& value) const
+{
+    return new Operand(Float, value);
+}
+
+const IOperand* Parser::CreateDouble(const std::string& value) const
+{
+    return new Operand(Double, value);
+}
+
+void Parser::CreateOperand(eOperandType type,
+    const std::string& value) const
+{
+    (void)type;
+    (void)value;
+
+    OperandCreatorsVector operandCreators ;
+
+    const IOperand* (Parser::*x)(const std::string& value) const;
+
+    x = &Parser::CreateInt8;
+
+    // std::function<const IOperand*(const std::string& value)> f = 
+    //     [=](const std::string& value) { this->CreateInt8(value); }; 
+}
+
+void    Parser::ParseInstructions(const std::vector<Lexer::Token>& tokens)
+{
+    (void)(tokens);
+    // for (const auto& token : tokens)
+    // {
+        
+    // }
+}
+
+bool    Parser::ParseTokens(const std::vector<Lexer::Token>& tokens)
+{
+    if (!IsParseValidationOk(tokens))
+        return false;
+
+    ParseInstructions(tokens);
 
     return true;
 }
