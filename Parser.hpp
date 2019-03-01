@@ -6,7 +6,7 @@
 /*   By: dborysen <dborysen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 15:16:48 by dborysen          #+#    #+#             */
-/*   Updated: 2019/02/28 17:26:29 by dborysen         ###   ########.fr       */
+/*   Updated: 2019/03/01 17:30:55 by dborysen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,34 @@
 #include "IOperand.hpp"
 #include "Operand.hpp"
 
-using OperandsVector = std::vector<std::unique_ptr<IOperand> >;
+using OperandsVector = std::vector<std::unique_ptr<const IOperand> >;
 
 class Parser
 {
 public:
+    enum instructions
+    {
+        push,
+        pop,
+        dump,
+        assert,
+        add,
+        sub,
+        mul,
+        div,
+        mod,
+        print,
+        exit
+    };
+
+    enum elemAttributes
+    { 
+        firstElem,
+        secondElem,
+
+        minStackElemNum
+    };
+
     Parser() = default;
     Parser(const Parser& other) = delete;
     Parser(const Parser&& other) = delete;
@@ -37,10 +60,8 @@ public:
     /************************************************/
 
     bool            ParseTokens(const std::vector<Lexer::Token>& tokens);
-    void CreateOperand(eOperandType type,
+    const IOperand* CreateOperand(eOperandType type,
         const std::string& value) const;
-
-    OperandsVector mainStack;
 
 private:
     const IOperand* CreateInt8(const std::string& value) const;
@@ -49,9 +70,25 @@ private:
     const IOperand* CreateFloat(const std::string& value) const;
     const IOperand* CreateDouble(const std::string& value) const;
 
+    /* Instructions */
+    void    Push(eOperandType type, const std::string& value);
+    void    Pop();
+    void    Dump();
+    void    Assert(eOperandType type, const std::string& value);
+    void    Add();
+    void    Sub();
+    void    Mul();
+    void    Div();
+    void    Mod();
+    void    Print() const;
+    void    Exit() const;
+
     bool    IsParseValidationOk(const std::vector<Lexer::Token>& tokens) const;
     void    ParseInstructions(const std::vector<Lexer::Token>& tokens);
-};
+    void    ReplaceFirstTwoElem(const IOperand* newOne);
+    void    CheckIfMoreThenTwoElem(const std::string& funcName) const;
 
+    OperandsVector _mainStack;
+};
 
 # endif
