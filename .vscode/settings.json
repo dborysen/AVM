@@ -55,6 +55,7 @@
         "regex": "cpp",
         "__tree": "cpp",
         "map": "cpp",
-        "stack": "cpp"
+        "stack": "cpp",
+        "iomanip": "cpp"
     }
 }

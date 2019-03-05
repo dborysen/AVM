@@ -6,14 +6,11 @@
 /*   By: dborysen <dborysen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/27 12:56:05 by dborysen          #+#    #+#             */
-/*   Updated: 2019/03/01 17:31:17 by dborysen         ###   ########.fr       */
+/*   Updated: 2019/03/05 15:50:32 by dborysen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Parser.hpp"
-
-using OperandCreatorsVector = std::vector<std::function<
-    const IOperand*(const std::string& value)> >;
 
 static std::map<std::string, eOperandType> typeMap{
     {"int8", Int8 },
@@ -33,43 +30,36 @@ static bool IsExitExist(const std::vector<Lexer::Token>& tokens)
     return it != tokens.end();
 }
 
-static bool IsValuesInRightDiapason(const std::vector<Lexer::Token>& tokens)
+static bool IsValueInRightDiapason(eOperandType type, double value)
 {
     std::vector<std::pair<double, double>> typesLimits{
         { std::numeric_limits<int8_t>::min(), std::numeric_limits<int8_t>::max() },
         { std::numeric_limits<int16_t>::min(), std::numeric_limits<int16_t>::max() },
         { std::numeric_limits<int32_t>::min(), std::numeric_limits<int32_t>::max() },
-        { std::numeric_limits<float>::min(), std::numeric_limits<float>::max() },
-        { std::numeric_limits<double>::min(), std::numeric_limits<double>::max() }
+        { -FLT_MAX, FLT_MAX },
+        { -DBL_MAX, DBL_MAX }
     };
 
-    for (const auto& token : tokens)
-    {
-        if (token.type.empty())
-            continue;
-        
-        const auto min = typesLimits.at(typeMap[token.type]).first;
-        const auto max = typesLimits.at(typeMap[token.type]).second;
+    auto min = typesLimits.at(type).first;
+    auto max = typesLimits.at(type).second;
 
-        if (token.value < min || token.value > max)
-            return false;
-    }
-    return true;
+    return value >= min && value <= max;
 }
 
 bool    Parser::IsParseValidationOk(const std::vector<Lexer::Token>& tokens) const
 {
+    if (tokens.empty())
+    {
+        std::cerr << "\033[1;31mError:\033[0m no tokens" << std::endl;
+        return false;
+    }
+
     if (!IsExitExist(tokens))
     {
         std::cerr << "\033[1;31mError:\033[0m no exit" << std::endl;
         return false;
     }
 
-    if (!IsValuesInRightDiapason(tokens))
-    {
-        std::cerr << "\033[1;31mError:\033[0m value in wrong diapason" << std::endl;
-        return false;
-    }
     return true;
 }
 
@@ -107,7 +97,8 @@ void    Parser::Push(eOperandType type, const std::string& value)
 void    Parser::Pop()
 {
     if (_mainStack.empty())
-        throw std::logic_error("Stack is empty, can't do Pop instruction");
+        throw std::logic_error("\033[1;31mError:\033[0m\
+        Stack is empty, can't do Pop instruction");
 
     _mainStack.pop_back();
 }
@@ -115,30 +106,43 @@ void    Parser::Pop()
 void    Parser::Dump()
 {
     if (_mainStack.empty())
-        throw std::logic_error("Stack is empty, can't do Dump instruction");
-
+        throw std::logic_error("\033[1;31mError:\033[0m \
+        Stack is empty, can't do Dump instruction");
 
     for (auto it = _mainStack.rbegin(); it != _mainStack.rend(); it++)
     {
-        std::cout << (*it)->ToString() << std::endl;
+        if ((*it)->GetType() < Float)
+        {
+            std::cout << (*it)->GetPrecision() << std::endl;
+            continue;
+        }
+
+        std::cout << std::fixed;
+        std::cout << std::setprecision(2);
+        std::cout << std::stod((*it)->ToString()) << std::endl;
     }
 }
 
 void    Parser::Assert(eOperandType type, const std::string& value)
 {
     if (_mainStack.empty())
-        throw std::logic_error("Stack is empty, can't do Assert instruction");
+        throw std::logic_error("\033[1;31mError:\033[0m \
+        Stack is empty, can't do Assert instruction");
 
     const auto top = std::prev(_mainStack.cend());
 
-    if ((*top)->ToString() != value &&
-        (*top)->GetPrecision() != type)
-        throw std::logic_error("Value at the top of the stack not equal\
-            to the passed");
+    if ((*top)->ToString() != std::to_string(std::stod(value))
+        || (*top)->GetPrecision() != type)
+        throw std::logic_error("\033[1;31mError:\033[0m \
+        Value at the top of the stack not equal to the passed one");
 }
 
 void    Parser::ReplaceFirstTwoElem(const IOperand* newOne)
 {
+    if (!IsValueInRightDiapason(newOne->GetType(), std::stod(newOne->ToString())))
+    {
+        throw std::logic_error("\033[1;31mError:\033[0m value in wrong diapason");
+    }
     _mainStack.pop_back();
     _mainStack.pop_back();
     _mainStack.push_back(std::unique_ptr<const IOperand>(newOne));
@@ -146,31 +150,21 @@ void    Parser::ReplaceFirstTwoElem(const IOperand* newOne)
 
 void    Parser::CheckIfMoreThenTwoElem(const std::string& funcName) const
 {
-    const std::string massage = "Stack has less than 2 elementsm can't do" +
-        funcName + "instruction";
+    const std::string massage = "\033[1;31mError:\033[0m \
+        Stack has less than 2 elementsm can't do " + funcName + " instruction";
 
     if (_mainStack.size() < minStackElemNum)
         throw std::logic_error(massage);
 }
 
-
 void    Parser::Add()
 {
-    // _mainStack.push_back(std::unique_ptr<const IOperand>
-    //     (CreateOperand(Int8, "2")));
-
-    // _mainStack.push_back(std::unique_ptr<const IOperand>
-    //     (CreateOperand(Int16, "3")));   
-
-    //     _mainStack.push_back(std::unique_ptr<const IOperand>
-    //     (CreateOperand(Float, "3.2")));   
-
     CheckIfMoreThenTwoElem("Add");
 
     const auto top = std::prev(_mainStack.end());
     const auto second = std::prev(top);
 
-    ReplaceFirstTwoElem(**top + **second);
+    ReplaceFirstTwoElem(**second + **top);
 }
 
 void    Parser::Sub()
@@ -180,7 +174,7 @@ void    Parser::Sub()
     auto top = std::prev(_mainStack.end());
     auto second = std::prev(top);
 
-    ReplaceFirstTwoElem(**top - **second);
+    ReplaceFirstTwoElem(**second - **top);
 }
 
 void    Parser::Mul()
@@ -190,7 +184,7 @@ void    Parser::Mul()
     auto top = std::prev(_mainStack.end());
     auto second = std::prev(top);
 
-    ReplaceFirstTwoElem(**top * **second);
+    ReplaceFirstTwoElem(**second * **top);
 }
 
 void    Parser::Div()
@@ -200,7 +194,7 @@ void    Parser::Div()
     auto top = std::prev(_mainStack.end());
     auto second = std::prev(top);
 
-    ReplaceFirstTwoElem(**top / **second);
+    ReplaceFirstTwoElem(**second / **top);
 }
 
 void    Parser::Mod()
@@ -210,23 +204,25 @@ void    Parser::Mod()
     auto top = std::prev(_mainStack.end());
     auto second = std::prev(top);
 
-    ReplaceFirstTwoElem(**top % **second);
+    ReplaceFirstTwoElem(**second % **top);
 }
 
-void    Parser::Print() const
+void    Parser::Print()
 {
     if (_mainStack.empty())
-        throw std::logic_error("Stack is empty, can't do Print instruction");
+        throw std::logic_error("\033[1;31mError:\033[0m \
+        Stack is empty, can't do Print instruction");
     
     auto top = std::prev(_mainStack.end());
 
     if ((*top)->GetType() != Int8)
-        throw std::logic_error("Top element is not Int8");
+        throw std::logic_error("\033[1;31mError:\033[0m \
+        Top element is not Int8");
     
     std::cout << char((*top)->GetPrecision()) << std::endl;
 }
 
-void    Parser::Exit() const
+void    Parser::Exit()
 {
     std::exit(1);
 }
@@ -234,7 +230,7 @@ void    Parser::Exit() const
 const IOperand* Parser::CreateOperand(eOperandType type,
     const std::string& value) const
 {
-    std::vector<const IOperand* (Parser::*)(const std::string& value) const> vec{
+    std::vector<const IOperand* (Parser::*)(const std::string& value) const> funcVec{
         &Parser::CreateInt8,
         &Parser::CreateInt16,
         &Parser::CreateInt32,
@@ -242,18 +238,25 @@ const IOperand* Parser::CreateOperand(eOperandType type,
         &Parser::CreateDouble
     };
 
-    return (Parser().*vec.at(type))(value);
+    return (this->*funcVec.at(type))(value);
 }
 
-void    Parser::ParseInstructions(const std::vector<Lexer::Token>& tokens)
+void    Parser::InitializeInstructionsMap()
 {
-    (void)(tokens);
+    _instructionsMap = {
+        {"pop", &Parser::Pop},
+        {"dump", &Parser::Dump},
+        {"add", &Parser::Add},
+        {"sub", &Parser::Sub},
+        {"mul", &Parser::Mul},
+        {"div", &Parser::Div},
+        {"mod", &Parser::Mod},
+        {"print", &Parser::Print},
+        {"exit", &Parser::Exit}};
 
-    Add();
-    // for (const auto& token : tokens)
-    // {
-    // }
-
+    _paramInstructionsMap = {
+        {"push", &Parser::Push},
+        {"assert", &Parser::Assert}};
 }
 
 bool    Parser::ParseTokens(const std::vector<Lexer::Token>& tokens)
@@ -261,7 +264,28 @@ bool    Parser::ParseTokens(const std::vector<Lexer::Token>& tokens)
     if (!IsParseValidationOk(tokens))
         return false;
 
-    ParseInstructions(tokens);
+    InitializeInstructionsMap();
+
+    for (const auto& token : tokens)
+    {
+        const auto instruction = token.instruction;
+
+        if (instruction == "push" || instruction == "assert")
+        {
+            const auto type = typeMap.at(token.type);
+            const auto value = std::to_string(token.value);
+            
+            if (!IsValueInRightDiapason(type, token.value))
+            {
+                std::cerr << "\033[1;31mError:\033[0m value in wrong diapason\n";
+                return false;
+            }
+
+            (this->*_paramInstructionsMap.at(instruction))(type, value);
+            continue;
+        }
+        (this->*_instructionsMap.at(instruction))();        
+    }
 
     return true;
 }

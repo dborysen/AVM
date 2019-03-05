@@ -6,7 +6,7 @@
 /*   By: dborysen <dborysen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 11:31:52 by dborysen          #+#    #+#             */
-/*   Updated: 2019/02/27 15:47:31 by dborysen         ###   ########.fr       */
+/*   Updated: 2019/03/05 12:12:20 by dborysen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ private:
     size_t  GetNonEmptySize(const std::cmatch& result) const;
 
     std::vector<Token> _tokens;
-
 };
 
 # endif

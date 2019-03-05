@@ -6,7 +6,7 @@
 /*   By: dborysen <dborysen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 11:31:31 by dborysen          #+#    #+#             */
-/*   Updated: 2019/02/28 12:48:58 by dborysen         ###   ########.fr       */
+/*   Updated: 2019/03/05 15:51:39 by dborysen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,6 @@ int main(int argc, char** argv)
 
         if (!avm.parser.ParseTokens(avm.lexer.GetTokens()))
             throw std::logic_error("\tParsing fail");
-
-            for (const auto& token : avm.lexer.GetTokens())
-            {
-                std::cout << token.instruction + " " 
-                << token.type << " " << token.value << std::endl; 
-            }
     }
     catch(const std::exception& e)
     {

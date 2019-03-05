@@ -6,7 +6,7 @@
 /*   By: dborysen <dborysen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/28 15:54:51 by dborysen          #+#    #+#             */
-/*   Updated: 2019/03/01 17:02:59 by dborysen         ###   ########.fr       */
+/*   Updated: 2019/03/05 15:48:27 by dborysen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,6 @@ _type(type) {}
 int Operand::GetPrecision() const
 {
     return std::atoi(_precision.c_str());
-}
-
-double  Operand::GetPrecisionInDouble() const
-{
-    return std::stod(_precision);
 }
 
 eOperandType    Operand::GetType() const
@@ -62,8 +57,8 @@ const IOperand* Operand::operator*(const IOperand& rhs) const
 
 const IOperand* Operand::operator/(const IOperand& rhs) const
 {
-    if (rhs.GetPrecision() == 0)
-        throw std::logic_error("Division by 0");
+    if (std::stod(rhs.ToString()) == 0)
+        throw std::logic_error("\033[1;31mError:\033[0m Division by 0");
 
     const auto value = std::stod(ToString()) / std::stod(rhs.ToString());
     const auto type = _type >= rhs.GetType() ? _type : rhs.GetType();
@@ -74,7 +69,7 @@ const IOperand* Operand::operator/(const IOperand& rhs) const
 const IOperand* Operand::operator%(const IOperand& rhs) const
 {
     if (rhs.GetPrecision() == 0)
-        throw std::logic_error("Modulo by 0");
+        throw std::logic_error("\033[1;31mError:\033[0m Modulo by 0");
 
     const auto value = GetPrecision() % rhs.GetPrecision();
     const auto type = _type >= rhs.GetType() ? _type : rhs.GetType();

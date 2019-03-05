@@ -6,7 +6,7 @@
 /*   By: dborysen <dborysen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 11:51:56 by dborysen          #+#    #+#             */
-/*   Updated: 2019/02/27 15:46:58 by dborysen         ###   ########.fr       */
+/*   Updated: 2019/03/05 15:30:11 by dborysen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,19 +29,28 @@ size_t  Lexer::GetNonEmptySize(const std::cmatch& result) const
     return nonEmpty;
 }
 
+std::string GetNonCommentLine(const std::string& line)
+{
+    const auto pos = line.find(';');
+
+    return pos == std::string::npos ? line : line.substr(0, pos);
+}
+
 void    Lexer::SaveTokens(const std::vector<std::string>& inputData)
 {
     std::cmatch result;
     std::regex regular("(push|assert)\\s+"
                         "(int8|int16|int32|double|float)"
-                        "\\(([0-9]+\\.?[0-9]*)\\)"
+                        "\\((-?[0-9]+\\.?[0-9]*)\\)"
                         "|(pop|dump|add|sub|mul|div|mod|print|exit)");
 
     for (const auto& line : inputData)
     {
         Lexer::Token token;
 
-        if (std::regex_search(line.c_str(), result, regular))
+        const auto nonCommentLine = line.substr(0, line.find(';')).c_str();
+
+        if (std::regex_search(nonCommentLine, result, regular))
         {
             const auto nonEmptyResultSize = GetNonEmptySize(result);
 

@@ -6,7 +6,7 @@
 /*   By: dborysen <dborysen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 15:16:48 by dborysen          #+#    #+#             */
-/*   Updated: 2019/03/01 17:30:55 by dborysen         ###   ########.fr       */
+/*   Updated: 2019/03/05 15:41:18 by dborysen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,21 @@
 #include <map>
 #include <limits>
 #include <functional>
+#include <float.h>
 #include "Lexer.hpp"
 #include "IOperand.hpp"
 #include "Operand.hpp"
 
-using OperandsVector = std::vector<std::unique_ptr<const IOperand> >;
-
 class Parser
 {
 public:
+    using InstuctionsMap = std::map<std::string, void (Parser::*)()>;
+    using OperandsVector = std::vector<std::unique_ptr<const IOperand> >;
+    using ParamInstuctionsMap = std::map<std::string, void (Parser::*)
+        (eOperandType type, const std::string& value)>;
+    using OperandCreatorsVector = std::vector<std::function<
+        const IOperand*(const std::string& value)> >;
+
     enum instructions
     {
         push,
@@ -80,15 +86,17 @@ private:
     void    Mul();
     void    Div();
     void    Mod();
-    void    Print() const;
-    void    Exit() const;
+    void    Print();
+    void    Exit();
 
     bool    IsParseValidationOk(const std::vector<Lexer::Token>& tokens) const;
-    void    ParseInstructions(const std::vector<Lexer::Token>& tokens);
     void    ReplaceFirstTwoElem(const IOperand* newOne);
     void    CheckIfMoreThenTwoElem(const std::string& funcName) const;
+    void    InitializeInstructionsMap();
 
-    OperandsVector _mainStack;
+    OperandsVector      _mainStack;
+    InstuctionsMap      _instructionsMap;
+    ParamInstuctionsMap _paramInstructionsMap;
 };
 
 # endif

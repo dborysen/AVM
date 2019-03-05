@@ -6,7 +6,7 @@
 /*   By: dborysen <dborysen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 13:25:21 by dborysen          #+#    #+#             */
-/*   Updated: 2019/02/27 13:37:47 by dborysen         ###   ########.fr       */
+/*   Updated: 2019/03/04 17:56:18 by dborysen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,18 @@ bool    Avm::ValidateData()
         return false;
     }
     
-    std::regex validationReg("((push|assert)\\s+"
+    std::regex validationReg("([\t ]*(push|assert)\\s+"
                             "((int8|int16|int32)"
-                            "\\(([0-9]+)\\))"
+                            "\\((-?[0-9]+)\\))"
                             "[\t ]*(;.*)?)"
 
-                            "|((push|assert)\\s+"
+                            "|([\t ]*(push|assert)\\s+"
                             "(float|double)"
-                            "\\([0-9]+.[0-9]*\\)"
+                            "\\(-?[0-9]+.[0-9]*\\)"
                             "[\t ]*(;.*)?"
 
                             "|([\t ]*;.*)"
-                            "|(pop|dump|add|sub|mul|div|mod|print|exit)"
+                            "|[\t ]*(pop|dump|add|sub|mul|div|mod|print|exit)"
                             "[\t ]*(;.*)?)"
                             "|(^\\s*$))");
 

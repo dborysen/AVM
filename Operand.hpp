@@ -13,6 +13,7 @@
 #include "IOperand.hpp"
 #include <iostream>
 #include <string>
+#include <iomanip>
 
 class Operand : public IOperand
 {
@@ -27,7 +28,6 @@ public:
     Operand&&   operator=(const Operand&& other) = delete;
 
     int             GetPrecision() const override;
-    double          GetPrecisionInDouble() const;
     eOperandType    GetType() const override;
 
     const IOperand* operator+( const IOperand& rhs ) const override;
