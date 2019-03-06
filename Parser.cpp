@@ -6,7 +6,7 @@
 /*   By: dborysen <dborysen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/27 12:56:05 by dborysen          #+#    #+#             */
-/*   Updated: 2019/03/05 15:50:32 by dborysen         ###   ########.fr       */
+/*   Updated: 2019/03/06 13:29:42 by dborysen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,19 +48,35 @@ static bool IsValueInRightDiapason(eOperandType type, double value)
 
 bool    Parser::IsParseValidationOk(const std::vector<Lexer::Token>& tokens) const
 {
+    auto isOk = true;
+
     if (tokens.empty())
     {
         std::cerr << "\033[1;31mError:\033[0m no tokens" << std::endl;
-        return false;
+        isOk = false;
     }
 
     if (!IsExitExist(tokens))
     {
         std::cerr << "\033[1;31mError:\033[0m no exit" << std::endl;
-        return false;
+        isOk = false;
     }
 
-    return true;
+    for (const auto& token : tokens)
+    {
+        if (!IsValueInRightDiapason(typeMap[token.type], token.value))
+        {
+            std::cerr << "\033[1;31mError:\033[0m value in wrong diapason:"
+            << std::endl << "\t" + token.instruction + " " + token.type + "(";
+            std::cout << std::fixed;
+            std::cout << std::setprecision(2);
+            std::cout << token.value;
+            std::cout << ")" << std::endl;
+
+            isOk = false;
+        }
+    }
+    return isOk;
 }
 
 const IOperand* Parser::CreateInt8(const std::string& value) const
@@ -131,8 +147,7 @@ void    Parser::Assert(eOperandType type, const std::string& value)
 
     const auto top = std::prev(_mainStack.cend());
 
-    if ((*top)->ToString() != std::to_string(std::stod(value))
-        || (*top)->GetPrecision() != type)
+    if ((*top)->ToString() != value || (*top)->GetType() != type)
         throw std::logic_error("\033[1;31mError:\033[0m \
         Value at the top of the stack not equal to the passed one");
 }
@@ -274,12 +289,6 @@ bool    Parser::ParseTokens(const std::vector<Lexer::Token>& tokens)
         {
             const auto type = typeMap.at(token.type);
             const auto value = std::to_string(token.value);
-            
-            if (!IsValueInRightDiapason(type, token.value))
-            {
-                std::cerr << "\033[1;31mError:\033[0m value in wrong diapason\n";
-                return false;
-            }
 
             (this->*_paramInstructionsMap.at(instruction))(type, value);
             continue;
