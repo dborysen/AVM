@@ -6,7 +6,7 @@
 /*   By: dborysen <dborysen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 12:16:49 by dborysen          #+#    #+#             */
-/*   Updated: 2019/02/28 13:02:23 by dborysen         ###   ########.fr       */
+/*   Updated: 2019/04/01 15:09:40 by dborysen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include "Lexer.hpp"
 #include "Parser.hpp"
 #include "IOperand.hpp"
+#include "MyException.hpp"
 
 enum avmAttributes
 {

@@ -6,7 +6,7 @@
 /*   By: dborysen <dborysen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/27 12:56:05 by dborysen          #+#    #+#             */
-/*   Updated: 2019/03/06 13:29:42 by dborysen         ###   ########.fr       */
+/*   Updated: 2019/04/01 15:59:45 by dborysen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ void    Parser::Push(eOperandType type, const std::string& value)
 void    Parser::Pop()
 {
     if (_mainStack.empty())
-        throw std::logic_error("\033[1;31mError:\033[0m\
+        throw MyException("\033[1;31mError:\033[0m\
         Stack is empty, can't do Pop instruction");
 
     _mainStack.pop_back();
@@ -122,7 +122,7 @@ void    Parser::Pop()
 void    Parser::Dump()
 {
     if (_mainStack.empty())
-        throw std::logic_error("\033[1;31mError:\033[0m \
+        throw MyException("\033[1;31mError:\033[0m \
         Stack is empty, can't do Dump instruction");
 
     for (auto it = _mainStack.rbegin(); it != _mainStack.rend(); it++)
@@ -142,13 +142,13 @@ void    Parser::Dump()
 void    Parser::Assert(eOperandType type, const std::string& value)
 {
     if (_mainStack.empty())
-        throw std::logic_error("\033[1;31mError:\033[0m \
+        throw MyException("\033[1;31mError:\033[0m \
         Stack is empty, can't do Assert instruction");
 
     const auto top = std::prev(_mainStack.cend());
 
     if ((*top)->ToString() != value || (*top)->GetType() != type)
-        throw std::logic_error("\033[1;31mError:\033[0m \
+        throw MyException("\033[1;31mError:\033[0m \
         Value at the top of the stack not equal to the passed one");
 }
 
@@ -156,7 +156,7 @@ void    Parser::ReplaceFirstTwoElem(const IOperand* newOne)
 {
     if (!IsValueInRightDiapason(newOne->GetType(), std::stod(newOne->ToString())))
     {
-        throw std::logic_error("\033[1;31mError:\033[0m value in wrong diapason");
+        throw MyException("\033[1;31mError:\033[0m value in wrong diapason");
     }
     _mainStack.pop_back();
     _mainStack.pop_back();
@@ -169,7 +169,7 @@ void    Parser::CheckIfMoreThenTwoElem(const std::string& funcName) const
         Stack has less than 2 elementsm can't do " + funcName + " instruction";
 
     if (_mainStack.size() < minStackElemNum)
-        throw std::logic_error(massage);
+        throw MyException(massage);
 }
 
 void    Parser::Add()
@@ -225,13 +225,13 @@ void    Parser::Mod()
 void    Parser::Print()
 {
     if (_mainStack.empty())
-        throw std::logic_error("\033[1;31mError:\033[0m \
+        throw MyException("\033[1;31mError:\033[0m \
         Stack is empty, can't do Print instruction");
     
     auto top = std::prev(_mainStack.end());
 
     if ((*top)->GetType() != Int8)
-        throw std::logic_error("\033[1;31mError:\033[0m \
+        throw MyException("\033[1;31mError:\033[0m \
         Top element is not Int8");
     
     std::cout << char((*top)->GetPrecision()) << std::endl;

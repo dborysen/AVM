@@ -6,7 +6,7 @@
 /*   By: dborysen <dborysen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 13:25:21 by dborysen          #+#    #+#             */
-/*   Updated: 2019/03/04 17:56:18 by dborysen         ###   ########.fr       */
+/*   Updated: 2019/04/01 14:37:20 by dborysen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ bool    Avm::ValidateData()
 {
     if (_inputData.size() == 1 && *_inputData.begin() == "")
     {
-        std::cerr << "Error: no data" << std::endl;
+        std::cerr << "\033[1;31mError:\033[0m no data" << std::endl;
         return false;
     }
     

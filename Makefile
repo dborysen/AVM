@@ -6,13 +6,13 @@
 #    By: dborysen <dborysen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/15 11:35:57 by dborysen          #+#    #+#              #
-#    Updated: 2019/02/28 16:02:02 by dborysen         ###   ########.fr        #
+#    Updated: 2019/04/01 15:28:11 by dborysen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = AVM
 
-SRCS =  main.cpp Avm.cpp Lexer.cpp Parser.cpp Operand.cpp
+SRCS =  main.cpp Avm.cpp Lexer.cpp Parser.cpp Operand.cpp MyException.cpp
 
 OBJECT = $(SRCS:.cpp=.o)
 

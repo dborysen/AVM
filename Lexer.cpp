@@ -6,7 +6,7 @@
 /*   By: dborysen <dborysen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 11:51:56 by dborysen          #+#    #+#             */
-/*   Updated: 2019/03/05 15:30:11 by dborysen         ###   ########.fr       */
+/*   Updated: 2019/04/01 13:27:40 by dborysen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,9 @@ void    Lexer::SaveTokens(const std::vector<std::string>& inputData)
     {
         Lexer::Token token;
 
-        const auto nonCommentLine = line.substr(0, line.find(';')).c_str();
+        const auto nonCommentLine = line.substr(0, line.find(';'));
 
-        if (std::regex_search(nonCommentLine, result, regular))
+        if (std::regex_search(nonCommentLine.c_str(), result, regular))
         {
             const auto nonEmptyResultSize = GetNonEmptySize(result);
 
